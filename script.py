@@ -49,7 +49,19 @@ for file_name in os.listdir('/data'):
         # create pd dataframe from plot_list
         amino_data = pd.DataFrame(plot_list, columns = ['Name', 'Count', 'Percentage'])
 
-        plt.plot(amino_data['Count'], amino_data['Percentage'], 'o', color='black')
+        # create plots
+        fig, axs = plt.subplots(2)
+        axs[0].bar(amino_data['Name'], amino_data['Count'], align='center', alpha=0.5)
+        axs[0].set_title('Amino Acid Counts')
+        axs[0].set_xlabel('Amino Acid')
+        axs[0].set_ylabel('Count')
+        
+        axs[1].bar(amino_data['Name'], amino_data['Percentage'], align='center', alpha=0.5) 
+        axs[1].set_title('Amino Acid Percentages')
+        axs[1].set_xlabel('Amino Acid')
+        axs[1].set_ylabel('Percentage')
+
+        # save figure
         plt.save_fig('file_name' + str(amino_dict.index()) + '.png')
 
 
