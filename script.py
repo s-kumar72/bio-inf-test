@@ -10,6 +10,7 @@ import matplotlib as plt
 import gemmi
 
 import web_scraper as ws
+import read_cif as rc
 
 def file_exists(parser, arg):
     if not os.path.exists(arg):
@@ -17,15 +18,39 @@ def file_exists(parser, arg):
     else:
         return open(arg, 'r')
 
-parser = argparse.ArgumentParser(description='Parse .txt file.')
+parser = argparse.ArgumentParser(description='Parse a .txt file.')
 parser.add_argument('file', 
                      help='Input PDB IDs as txt file', 
                      type=lambda x: file_exists(parser, x))
 args = parser.parse_args()
 
+# opens .txt file of PDB IDs and formats them as a list
 ids = args.file.read()
-
 id_list = ids.split('\n')
 
+# fetches all the cif files from RCSB and puts them in a folder 
 ws.fetch_cif_file(id_list)
+
+amino_counts = []
+
+for file_name in os.listdir('/data'):
+    amino_counts = rc.get_amino_counts(file_name)
+    for amino_dict in amino_counts: 
+        # creates new dict to house counts & percentages for each amino acid in unique sequence 
+        new_dict = {}
+        for key in amino_dict.keys():
+            new_dict[key] = [amino_dict[key], (amino_dict[key] / amino_dict['total'])]
+        
+        # put all values into a list to make pd dataframe for plotting
+        plot_list = []
+        for key in new_dict.keys():
+            plot_list.append([key, new_dict[key][0], new_dict[key][1]])
+
+        # create pd dataframe from plot_list
+        amino_data = pd.DataFrame(plot_list, columns = ['Name', 'Count', 'Percentage'])
+
+        plt.plot(amino_data['Count'], amino_data['Percentage'], 'o', color='black')
+        plt.save_fig('file_name' + str(amino_dict.index()) + '.png')
+
+
 
