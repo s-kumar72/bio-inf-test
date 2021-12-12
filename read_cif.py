@@ -35,6 +35,7 @@ def get_amino_counts(file):
             # if char not already counted, count & add to dict
             if alph not in amino_acid_dict.keys():
                 amino_acid_dict[alph] = i_split.count(alph)
+        amino_acid_dict['total'] = len(i_split)
         # append dict to list 
         amino_acids.append(amino_acid_dict)
 
