@@ -1,3 +1,4 @@
+#! /usr/bin/python
 import requests
 import argparse
 import os
@@ -20,4 +21,4 @@ parser.add_argument('file', required=True,
                      type=lambda x: file_exists(parser, x))
 args = parser.parse_args()
 
-    
+print(args)
