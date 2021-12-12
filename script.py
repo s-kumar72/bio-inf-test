@@ -9,6 +9,8 @@ import matplotlib as plt
 
 import gemmi
 
+import web_scraper as ws
+
 def file_exists(parser, arg):
     if not os.path.exists(arg):
         parser.error('The file {} does not exist.'.format(arg))
@@ -16,9 +18,14 @@ def file_exists(parser, arg):
         return open(arg, 'r')
 
 parser = argparse.ArgumentParser(description='Parse .txt file.')
-parser.add_argument('file', required=True, 
+parser.add_argument('file', 
                      help='Input PDB IDs as txt file', 
                      type=lambda x: file_exists(parser, x))
 args = parser.parse_args()
 
-print(args)
+ids = args.file.read()
+
+id_list = ids.split('\n')
+
+ws.fetch_cif_file(id_list)
+
