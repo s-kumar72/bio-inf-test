@@ -2,6 +2,7 @@
 import requests
 import argparse
 import os
+import shutil
 
 import pandas as pd
 import numpy as np
@@ -32,6 +33,9 @@ id_list = ids.split('\n')
 ws.fetch_cif_file(id_list)
 
 amino_counts = []
+path = 'cif_plots'
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 for file_name in os.listdir('/data'):
     amino_counts = rc.get_amino_counts(file_name)
@@ -62,8 +66,9 @@ for file_name in os.listdir('/data'):
         axs[1].set_xlabel('Amino Acid')
         axs[1].set_ylabel('Percentage')
 
-        # save figure
-        plt.save_fig('file_name' + str(amino_dict.index()) + '.png')
-
+        # save figure & add to plots folder
+        plot_name = 'file_name' + str(amino_dict.index()) + '.png'
+        plt.save_fig(plot_name)
+        shutil.move(plot_name, 'cif_plots/')
 
 
