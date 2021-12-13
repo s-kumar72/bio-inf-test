@@ -1,9 +1,11 @@
 #! /usr/bin/python
 
 import gemmi 
+import os
 
-def get_amino_counts(file):
-    model = gemmi.read_structure(file)[0]
+def get_amino_counts(file_name):
+    print(os.getcwd())
+    model = gemmi.read_structure(os.getcwd() + '/' + file_name)[0]
 
     chain_list = []
     for i in model:
