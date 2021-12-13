@@ -6,7 +6,7 @@ import os
 def fetch_cif_file(pdb_id):
         path = 'cif_data'
         if not os.path.exists(path):
-            os.mkdir('cif_data')
+            os.mkdir(path)
         # URL to download PDB/mmCIF files from RCSB
         base_url = 'https://files.rcsb.org/download/PDBID.cif'
 
