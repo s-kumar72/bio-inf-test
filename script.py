@@ -39,7 +39,8 @@ for file_name in os.listdir('/data'):
         # creates new dict to house counts & percentages for each amino acid in unique sequence 
         new_dict = {}
         for key in amino_dict.keys():
-            new_dict[key] = [amino_dict[key], (amino_dict[key] / amino_dict['total'])]
+            if key not 'total':
+                new_dict[key] = [amino_dict[key], (amino_dict[key] / amino_dict['total'] * 100)]
         
         # put all values into a list to make pd dataframe for plotting
         plot_list = []
