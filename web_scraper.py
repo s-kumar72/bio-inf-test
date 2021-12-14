@@ -3,8 +3,8 @@
 import requests
 import os
 
-def fetch_cif_file(pdb_id):
-        path = 'cif_data'
+def fetch_cif_file(pdb_id, rdir):
+        path = os.path.join(rdir, 'cif_data')
         if not os.path.exists(path):
             os.mkdir(path)
         # URL to download PDB/mmCIF files from RCSB

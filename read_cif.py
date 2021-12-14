@@ -21,8 +21,9 @@ def get_amino_counts(file_name):
         i.replace('X', '', -1)
         i.replace('-', '', -1)
         sequences.append(i)
-    
+    # coverting list to a set keeps only unique entries
     unique_sequences = set(sequences)
+    # convert unique set to a list
     unique_seq_list = list(unique_sequences)
 
     amino_acids = []
