@@ -3,9 +3,7 @@
 import requests
 import argparse
 import os
-import shutil
 
-import pandas as pd
 import numpy as np
 import matplotlib as plt
 
@@ -45,50 +43,59 @@ files_not_read = []
 cif_plt_path = os.path.join(result_dir, 'cif_plots')
 cif_data_path = os.path.join(result_dir, 'cif_data')
 if not os.path.exists(cif_plt_path):
-    os.mkdir(cif_plt_path)
-print(cif_data_path)              
+    os.mkdir(cif_plt_path)             
 for file_name in os.listdir(cif_data_path):
-    cif_file = os.path.join(cif_data_path, filename)
+    cif_file = os.path.join(cif_data_path, file_name)
     if os.path.exists(cif_file):
-        amino_counts = rc.get_amino_counts(file_name, file_dir)
-        print('successfully retrieved amino_counts list!')
+        amino_counts = rc.get_amino_counts(cif_file)
+        
         for amino_dict in amino_counts: 
+            
+            # removes an - in amino dict
+            if '-' in amino_dict.keys():
+                count = amino_dict['_']
+                del(amino_dict['-'])
+                amino_dict['total'] = amino_dict['total'] - count
+                
             # creates new dict to house counts & percentages for each amino acid in unique sequence 
             new_dict = {}
             for key in amino_dict.keys():
                 if key != 'total':
-                    new_dict[key] = [amino_dict[key], (amino_dict[key] / amino_dict['total'] * 100)]
+                    new_dict[key] = [amino_dict[key], (float(amino_dict[key]) / float(amino_dict['total']) * 100)]
     
             # put all values into a list to make pd dataframe for plotting
             plot_list = []
             for key in new_dict.keys():
                 plot_list.append([key, new_dict[key][0], new_dict[key][1]])
-
-            # create pd dataframe from plot_list
-            amino_data = pd.DataFrame(plot_list, columns = ['Name', 'Count', 'Percentage'])
-
-            # create plots
-            fig, axs = plt.subplots(2)
-            axs[0].bar(amino_data['Name'], amino_data['Count'], align='center', alpha=0.5)
-            axs[0].set_title('Amino Acid Counts')
-            axs[0].set_xlabel('Amino Acid')
-            axs[0].set_ylabel('Count')
-    
-            axs[1].bar(amino_data['Name'], amino_data['Percentage'], align='center', alpha=0.5) 
-            axs[1].set_title('Amino Acid Percentages')
-            axs[1].set_xlabel('Amino Acid')
-            axs[1].set_ylabel('Percentage')
-
-            print('I AM SAVING THE PLOT')
+                
+            names_list = []
+            counts_list = []
+            percents_list = []
+            
+            for list in plot_list:
+                names_list.append(list[0])
+                counts_list.append(list[1])
+                percents_list.append(list[2])
+               
+            # create plot
+            w = 0.4
+            bar1 = np.arange(len(names_list))
+            bar2 = [i + w for i in bar1]
+            
+            plt.bar(bar1, counts_list, w, label="Count")
+            plt.bar(bar2, percents_list, w, label="Percentage)
+                    
+            plt.xlabel("Amino Acids")
+            plt.ylabel("Frequency")
+            plt.xticks(bar1 + (w/2), names_list)
+            plt.title("Amino Acid Count Frequency")
 
             # save figure & add to plots folder
             plot_name = file_name + str(amino_dict.index()) + '.png'
             plot_file = os.path.join(cif_plt_path, plot_name)
             plt.savefig(plot_file)
-            print('the directory where the plot is stored is: ' + cif_plt_path)
     else:
         files_not_read.append(file_name) 
 
 print(files_not_read)
-
-
+print("Sequence Completed.")
