@@ -13,6 +13,6 @@ def fetch_cif_file(pdb_id, rdir):
         for id in pdb_id:
                 r = requests.get(base_url.replace('PDBID', id, -1))
                 file_name = id + '.cif'
-                file_loc = os.path.join('cif_data/', file_name)
+                file_loc = os.path.join(path, file_name)
                 with open(file_loc, 'wb') as fd:
                         fd.write(r.text)
