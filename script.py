@@ -43,7 +43,7 @@ amino_counts = []
 files_not_read = []
 
 cif_plt_path = os.path.join(result_dir, 'cif_plots')
-cif_data_path = os.path.join(results_dir, 'cif_data')
+cif_data_path = os.path.join(result_dir, 'cif_data')
 if not os.path.exists(cif_plt_path):
     os.mkdir(cif_plt_path)
 print(cif_data_path)              
